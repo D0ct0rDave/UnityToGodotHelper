@@ -16,3 +16,6 @@ Add GameObjects to your Godot scene, and add MonoBehaviours to your GameObjects.
 Copy your Unity scripts for classes derived from MonoBehaviour into your Godot project and amend them to make them work inside Godot.
 
 ![SceneTree](imgs/SceneTree.jpg "SceneTree")
+
+##TODO
+Automatically set the node name in the scene tree, to the name of the script attached to the MonoBehaviour node.
