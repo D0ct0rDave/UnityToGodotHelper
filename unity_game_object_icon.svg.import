@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bd11tcjc6upij"
-path="res://.godot/imported/unity_component_icon.svg-afe84c22ae1355d927d2e244427c0e4a.ctex"
+uid="uid://kswxdn47ep8i"
+path="res://.godot/imported/unity_game_object_icon.svg-d2866a7593ba7a507c38a408e5c5af69.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/MonoBehaviour/unity_component_icon.svg"
-dest_files=["res://.godot/imported/unity_component_icon.svg-afe84c22ae1355d927d2e244427c0e4a.ctex"]
+source_file="res://addons/UnityToGodotHelper/unity_game_object_icon.svg"
+dest_files=["res://.godot/imported/unity_game_object_icon.svg-d2866a7593ba7a507c38a408e5c5af69.ctex"]
 
 [params]
 

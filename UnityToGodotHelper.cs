@@ -3,34 +3,49 @@ using System;
 using System.Diagnostics;
 
 // File to simplify Unity -> Godot porting
-namespace UnityPortHelper
+namespace UnityToGodotHelper
 {
 	public class PlayableAsset
 	{
-		private int dummy;
 	}
 
 	static public class _Time
 	{
 		static public float deltaTime;
+        
 	}
-	
 	public static class Debug
 	{
 		public static void Log(string message)
 		{
 			GD.Print(message);
+
+            #if DEBUG
+            if (Debugger.IsAttached)
+            {
+                Debugger.Log(2,"Log:", message);
+            }
+            #endif
 		}
 	}
-
 	public static class Assert
 	{
 		public static void IsTrue(bool condition,string message)
 		{
-			// Trace.Assert(condition, message);
+            System.Diagnostics.Debug.Assert(condition, message);
+            
+            #if DEBUG
+            if (!condition)
+            {
+                Debugger.Log(1,"Assert failed:", message);
+                if (Debugger.IsAttached)
+                {
+                    Debugger.Break();
+                }
+            }
+            #endif
 		}
 	}
-
     public static class Utils
     {
         public static GameObject GetGameObjectParent(GodotObject godotObject)
