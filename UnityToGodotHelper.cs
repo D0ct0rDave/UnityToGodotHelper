@@ -16,28 +16,34 @@ namespace UnityToGodotHelper
 	}
 	public static class Debug
 	{
-		public static void Log(string message)
+		public static void Log(string _message)
 		{
-			GD.Print(message);
+			GD.Print(_message);
 
             #if DEBUG
             if (Debugger.IsAttached)
             {
-                Debugger.Log(2,"Log:", message);
+                Debugger.Log(2,"Log:", _message);
             }
             #endif
 		}
+        
+        public static void LogError(string _message)
+        {
+            Log(_message);
+        }
+        
 	}
 	public static class Assert
 	{
-		public static void IsTrue(bool condition,string message)
+		public static void IsTrue(bool _condition,string _message)
 		{
-            System.Diagnostics.Debug.Assert(condition, message);
+            System.Diagnostics.Debug.Assert(_condition, _message);
             
             #if DEBUG
-            if (!condition)
+            if (!_condition)
             {
-                Debugger.Log(1,"Assert failed:", message);
+                Debugger.Log(1,"Assert failed:", _message);
                 if (Debugger.IsAttached)
                 {
                     Debugger.Break();
@@ -48,9 +54,9 @@ namespace UnityToGodotHelper
 	}
     public static class Utils
     {
-        public static GameObject GetGameObjectParent(GodotObject godotObject)
+        public static GameObject GetGameObjectParent(GodotObject _godotObject)
         {
-            Node node = godotObject as Node;
+            Node node = _godotObject as Node;
             if (node != null)
             {   do
                 {
