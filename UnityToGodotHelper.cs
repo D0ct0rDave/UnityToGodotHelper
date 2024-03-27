@@ -18,12 +18,14 @@ namespace UnityToGodotHelper
 	{
 		public static void Log(string _message)
 		{
-			GD.Print(_message);
-
             #if DEBUG
             if (Debugger.IsAttached)
             {
-                Debugger.Log(2,"Log:", _message);
+                Debugger.Log(2,"Log:", _message + "\n");
+            }
+            else
+            {
+			    GD.Print(_message);
             }
             #endif
 		}
@@ -44,6 +46,7 @@ namespace UnityToGodotHelper
             if (!_condition)
             {
                 Debugger.Log(1,"Assert failed:", _message);
+                GD.PushError(1,"Assert failed:", _message);
                 if (Debugger.IsAttached)
                 {
                     Debugger.Break();
