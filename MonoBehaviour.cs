@@ -1,6 +1,7 @@
 using System;
 using Godot;
 using UnityToGodotHelper;
+using Godot.NativeInterop;
 
 [Tool]
 public partial class MonoBehaviour : Node
@@ -14,14 +15,55 @@ public partial class MonoBehaviour : Node
     private bool m_started = false;
     private Callable ScriptChangedCallable;
 
+/*
+    static void Trampoline(object delegateObj, NativeVariantPtrArgs args, out godot_variant ret)
+    {
+        Debug.Log("Trampoline");
+
+
+        if (args.Count != 1)
+            throw new ArgumentException($"Callable expected 1 arguments but received" + args.Count.ToString());
+
+        TResult res = ((Func<int, string>)delegateObj)(
+            VariantConversionCallbacks.GetToManagedCallback<int>()(args[0])
+        );
+
+        ret = VariantConversionCallbacks.GetToVariantCallback<string>()(res);
+    }
+*/
+    static void Trampoline2(MonoBehaviour _object)
+    {
+        Debug.Log("Trampoline2");
+
+        /*
+        if (args.Count != 1)
+            throw new ArgumentException($""Callable expected {1} arguments but received {args.Count}.");
+
+        TResult res = ((Func<int, string>)delegateObj)(
+            VariantConversionCallbacks.GetToManagedCallback<int>()(args[0])
+        );
+
+        ret = VariantConversionCallbacks.GetToVariantCallback<string>()(res);
+        */
+    }
     public MonoBehaviour()
     {
         Name = GetType().ToString();
-        // ScriptChangedCallable = new Callable(this, nameof(OnScriptChanged));
-        // Connect(Godot.GodotObject.SignalName.ScriptChanged, ScriptChangedCallable);
         if (Engine.IsEditorHint())
         {   
-            ScriptChanged += OnScriptChanged;
+            // Callable callable = new Callable(this, nameof(OnScriptChanged));
+            // ScriptChangedCallable = callable.Bind(this);
+
+            // ScriptChangedCallable = Callable.CreateWithUnsafeTrampoline((int num) => "foo" + num.ToString(), &Trampoline);
+            ScriptChangedCallable = Callable.From(() => Trampoline2(this));
+            Connect(Godot.GodotObject.SignalName.ScriptChanged, ScriptChangedCallable);
+
+
+            // Connect("script_changed", ScriptChangedCallable);
+
+            TreeEntered += OnTreeEntered;
+            TreeExiting += OnTreeExiting;
+            // ScriptChanged += OnScriptChanged;
         }
 
         ChangeNodeName();
@@ -33,12 +75,14 @@ public partial class MonoBehaviour : Node
         {
             TreeEntered -= OnTreeEntered;
             TreeExiting -= OnTreeExiting;
-            ScriptChanged -= OnScriptChanged;
+
+            Disconnect(Godot.GodotObject.SignalName.ScriptChanged, ScriptChangedCallable);
+            // ScriptChanged -= OnScriptChanged;
         }
     }
 
     // Component methods
-    // Retrieves a 'sibling' components inside the parent
+    // Retrieves a 'sibling' componen inside the parent
     public T GetComponent<T>() where T : Node
     {
         return m_gameObject.GetComponent<T>();
@@ -64,7 +108,7 @@ public partial class MonoBehaviour : Node
     protected virtual void Update()
     {        
     }
-    private void ChangeNodeName()
+    public void ChangeNodeName()
     {
         if (Engine.IsEditorHint())    
         {
@@ -92,30 +136,22 @@ public partial class MonoBehaviour : Node
         }
     }
     
-    protected void OnScriptChanged()
+    protected virtual void OnScriptChanged(MonoBehaviour _this)
     {
         if (Engine.IsEditorHint())
         {
             Debug.Log("OnScriptChanged()");
-            ChangeNodeName();
+            _this.ChangeNodeName();
         }
     }
 
-    /// Node Godot lifetime methods
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
         if (Engine.IsEditorHint())
         {
             Debug.Log("_Ready()");
-
-            TreeEntered += OnTreeEntered;
-            TreeExiting += OnTreeExiting;
-            
-
             ChangeNodeName();
-
-            // Connect("script_changed", ScriptChangedCallable);
         }
 
         base._Ready();
@@ -140,7 +176,7 @@ public partial class MonoBehaviour : Node
             {
 
             }
-            
+
             m_started = true;
         }
         else
