@@ -7,7 +7,22 @@ public partial class GameObject : Node3D
 {
 	private string m_name;
 	public string name { get { return m_name; } }
-	
+    
+    public string fullQualifiedName { 
+        get 
+        {
+            string _fullyQualifiedName = name;
+            Node parentNode = GetParent();
+            while (parentNode != null)
+            {
+                _fullyQualifiedName = parentNode.Name + "/" + _fullyQualifiedName;
+                parentNode = parentNode.GetParent();
+            }
+            
+           return "/" + _fullyQualifiedName;           
+        } 
+    }
+
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{

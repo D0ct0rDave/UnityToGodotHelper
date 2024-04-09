@@ -19,7 +19,7 @@ public partial class MonoBehaviour : Node
 
     public MonoBehaviour()
     {
-        Debug.Log("MonoBehaviour ctor ");
+        // Debug.Log("MonoBehaviour ctor ");
         Name = GetType().ToString();
 
         if (Engine.IsEditorHint())
@@ -147,5 +147,10 @@ public partial class MonoBehaviour : Node
                 }
             }
         }
+    }
+
+    public bool HasStarted()
+    {
+        return m_started;
     }
 }
