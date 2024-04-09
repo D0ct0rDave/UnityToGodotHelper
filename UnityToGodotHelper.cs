@@ -35,35 +35,11 @@ namespace UnityToGodotHelper
             Log(_message);
         }
 	}
-    class MyTraceListener : TraceListener
-    {
-        // ...
 
-        public override void Fail(string msg, string detailedMsg)
-        {
-            // log the message (don't display a MessageBox)
-        }
-        public override void WriteLine(string msg)
-        {
-
-        }
-        public override void Write(string msg)
-        {
-
-        }        
-    }
 	public static class Assert
 	{
-        static bool m_handlerInitialized = false;
 		public static void IsTrue(bool _condition,string _message)
 		{
-            if (!m_handlerInitialized)
-            {
-                // Debug.Listeners.Clear();
-                // Debug.Listeners.Add(new MyTraceListener());
-                m_handlerInitialized = true;
-            }
-
             // System.Diagnostics.Debug.Assert(_condition, _message);
 
             #if DEBUG
