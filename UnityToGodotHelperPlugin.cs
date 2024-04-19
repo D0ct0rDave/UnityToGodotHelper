@@ -14,7 +14,7 @@ public partial class UnityToGodotHelperPlugin : EditorPlugin
 		
         Script monoBehaviourScript = ResourceLoader.Load("res://addons/UnityToGodotHelper/MonoBehaviour.cs") as Script;
         var monoBehaviourTexture = GD.Load<Texture2D>("res://addons/UnityToGodotHelper/unity_component_icon.svg");
-        AddCustomType("MonoBehaviour", "Node", monoBehaviourScript, monoBehaviourTexture);		
+        AddCustomType("MonoBehaviour", "Node3D", monoBehaviourScript, monoBehaviourTexture);		
 	}
 
 	public override void _ExitTree()

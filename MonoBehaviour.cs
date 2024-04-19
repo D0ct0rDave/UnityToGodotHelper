@@ -6,7 +6,9 @@ using Godot.NativeInterop;
 using System.Runtime.CompilerServices;
 
 [Tool]
-public partial class MonoBehaviour : Node
+public partial class MonoBehaviour : Node3D 
+// Setting the base as Node3D instead of Node, allows MonoBehaviour to have 3D children.
+// Not strictly good, but done for convenience.
 {
     private GameObject m_gameObject;
     public GameObject gameObject { get { return m_gameObject; } }
