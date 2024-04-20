@@ -2,6 +2,20 @@ using Godot;
 using System;
 using UnityToGodotHelper;
 
+
+// In Unity Monobehaviors are leaf nodes which don't allow other objects be parented with them. (AFAIK)
+// The game object, exposes all the component (monobehaviors) properties, so we can make prefab and still 
+// be able to modify internal properties.
+// In Godot, in order to modify the internal properties we should activate "Edit Children" which expands
+// the object tree, and it becomes less convenient, since the scene tree becomes "poluted" with many 
+// other objects parented with the GameObject, apart of the monobehaviours, and not needed.
+// It would be desirable to expose the properties of all the monobehaviour components in this object,
+// This way we could get rid of MonoBehaviors derived from Node3D, and it's child object could be placed 
+// in the parent GameObject.
+
+// This can probably be achieved currently, but it's not the purpose of this develpment. For this reason,
+// we'll keep Node3D as the base for MonoBehaviour
+
 [Tool]
 public partial class GameObject : Node3D
 {
@@ -11,15 +25,7 @@ public partial class GameObject : Node3D
     public string fullQualifiedName { 
         get 
         {
-            string _fullyQualifiedName = name;
-            Node parentNode = GetParent();
-            while (parentNode != null)
-            {
-                _fullyQualifiedName = parentNode.Name + "/" + _fullyQualifiedName;
-                parentNode = parentNode.GetParent();
-            }
-            
-           return "/" + _fullyQualifiedName;           
+            return Debug.GetFullyQualifiedName(this);
         } 
     }
 

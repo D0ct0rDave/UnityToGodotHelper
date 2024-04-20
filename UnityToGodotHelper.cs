@@ -34,6 +34,24 @@ namespace UnityToGodotHelper
         {
             Log(_message);
         }
+        
+        public static string GetFullyQualifiedName(Node _node)
+        {
+            if (_node == null)
+            {
+                return "(Null)";
+            }
+
+            string _fullyQualifiedName = _node.Name;
+            Node parentNode = _node.GetParent();
+            while (parentNode != null)
+            {
+                _fullyQualifiedName = parentNode.Name + "/" + _fullyQualifiedName;
+                parentNode = parentNode.GetParent();
+            }
+            
+           return "/" + _fullyQualifiedName;
+        }
 	}
 
 	public static class Assert
