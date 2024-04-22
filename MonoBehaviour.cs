@@ -36,6 +36,7 @@ public partial class MonoBehaviour : Node3D
         if (Engine.IsEditorHint())
         {
             // ScriptChanged -= OnScriptChanged;
+            TreeEntered -= OnTreeEntered;
         }
     }
 
@@ -46,7 +47,7 @@ public partial class MonoBehaviour : Node3D
     }
     private void OnTreeEntered()
     {
-        Debug.Log("OnScriptChanged");
+        Debug.Log("OnTreeEntered");
         ChangeNodeName();
     }
     private void ChangeNodeName()
@@ -60,7 +61,7 @@ public partial class MonoBehaviour : Node3D
             {
                 if (script.ResourceName != "")
                 {
-                    Debug.Log("OnScriptChanged " + script.ResourceName);
+                    Debug.Log("Name =" + script.ResourceName);
                     Name = script.ResourceName;
                 }
                 else if (script.ResourcePath != "")
