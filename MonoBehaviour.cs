@@ -46,8 +46,7 @@ public partial class MonoBehaviour : Node3D
     }
     private void OnTreeEntered()
     {
-        Debug.Log("OnScriptChanged");
-        ChangeNodeName();
+        Debug.Log("OnTreeEntered");
     }
     private void ChangeNodeName()
     {
