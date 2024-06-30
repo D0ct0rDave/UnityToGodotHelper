@@ -56,7 +56,7 @@ namespace UnityToGodotHelper
 
 	public static class Assert
 	{
-		public static void IsTrue(bool _condition,string _message)
+		public static void IsTrue(bool _condition, string _message)
 		{
             // System.Diagnostics.Debug.Assert(_condition, _message);
 
