@@ -126,11 +126,15 @@ public partial class MonoBehaviour : Node3D
         {
             if (! m_started)
             {
+                #if !DEBUG
                 try
+                #endif
                 {
                     Start();
                 }
+                #if !DEBUG
                 catch
+                #endif
                 {
 
                 }
@@ -139,11 +143,15 @@ public partial class MonoBehaviour : Node3D
             }
             else
             {          
+                #if !DEBUG
                 try
+                #endif
                 {
                 Update();
                 }
+                #if !DEBUG
                 catch
+                #endif
                 {
                     
                 }

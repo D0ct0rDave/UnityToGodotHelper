@@ -21,7 +21,7 @@ namespace UnityToGodotHelper
             #if DEBUG
             if (Debugger.IsAttached)
             {
-                Debugger.Log(2,"Log:", _message + "\n");
+                Debugger.Log(0,"Log:", _message + "\n");
             }
             else
             {
@@ -32,9 +32,24 @@ namespace UnityToGodotHelper
         
         public static void LogError(string _message)
         {
-            Log(_message);
+            #if DEBUG
+            if (Debugger.IsAttached)
+            {
+                Debugger.Log(2,"Error:", _message + "\n");
+            }
+            else
+            {
+			    GD.PrintErr(_message);
+            }
+            #endif
         }
         
+        public static void LogException(Exception ex)
+        {
+            LogError($"Exception: {ex.Message}\n{ex.StackTrace}");            
+            Debugger.Break();
+        }
+
         public static string GetFullyQualifiedName(Node _node)
         {
             if (_node == null)
