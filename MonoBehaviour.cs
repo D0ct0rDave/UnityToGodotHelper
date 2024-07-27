@@ -107,6 +107,9 @@ public partial class MonoBehaviour : Node3D
 
         Assert.IsTrue(m_gameObject != null, "This MonoBehaviour component does not belong to any parent GameObject");
         Awake();
+
+        Start();
+        m_started = true;
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -135,7 +138,7 @@ public partial class MonoBehaviour : Node3D
                 #if !DEBUG
                 catch
                 #endif
-                {
+                {                    
 
                 }
 
