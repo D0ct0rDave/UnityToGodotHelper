@@ -21,6 +21,7 @@ public partial class GameObject : Node3D
 {
 	private string m_name;
 	public string name { get { return m_name; } }
+    private bool m_started = false;
     
     public string fullQualifiedName { 
         get 
@@ -33,6 +34,7 @@ public partial class GameObject : Node3D
 	public override void _Ready()
 	{
 		m_name = Name;
+        m_started = true;
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -101,4 +103,9 @@ public partial class GameObject : Node3D
             }
         }
 	}
+    // ------------------------------------------------------------------------
+    public bool HasStarted()
+    {
+        return m_started;
+    }
 }

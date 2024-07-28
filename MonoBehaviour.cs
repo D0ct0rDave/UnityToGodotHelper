@@ -18,7 +18,7 @@ public partial class MonoBehaviour : Node3D
 
     private bool m_started = false;
     private bool m_scriptChanged = false;
-
+    // ------------------------------------------------------------------------
     public MonoBehaviour()
     {
         // Debug.Log("MonoBehaviour ctor ");
@@ -49,6 +49,24 @@ public partial class MonoBehaviour : Node3D
     {
         Debug.Log("OnTreeEntered");
     }
+    private string ComputeNodeName()
+    {
+        Script script = (Script)GetScript();
+        if (script != null)
+        {
+            if (script.ResourceName != "")
+            {
+                Debug.Log("Name =" + script.ResourceName);
+                return script.ResourceName;
+            }
+            else if (script.ResourcePath != "")
+            {
+                return Path.GetFileNameWithoutExtension(script.ResourcePath);
+            }
+        }
+        
+        return Name;
+    }
     private void ChangeNodeName()
     {
         Debug.Log("ChangeNodeName");
@@ -58,47 +76,11 @@ public partial class MonoBehaviour : Node3D
             Script script = (Script)GetScript();
             if (script != null)
             {
-                if (script.ResourceName != "")
-                {
-                    Debug.Log("Name =" + script.ResourceName);
-                    Name = script.ResourceName;
-                }
-                else if (script.ResourcePath != "")
-                {
-                    string scriptFileName = Path.GetFileNameWithoutExtension(script.ResourcePath);
-                }
+                Name = ComputeNodeName();
             }
         }
     }
-    // Component methods
-    // Retrieves a 'sibling' componen inside the parent
-    public T GetComponent<T>() where T : Node
-    {
-        return m_gameObject.GetComponent<T>();
-    } 
-
-    protected void Destroy(GameObject i_gameObject)
-    {
-        i_gameObject.Dispose();
-    }
-
-    protected void DontDestroyOnLoad(GameObject i_gameObject)
-    {
-    }
-
-    /// Component lifetime methods
-    protected virtual void Awake()
-    {
-    }
-
-    protected virtual void Start()
-    {
-    }
-    
-    protected virtual void Update()
-    {        
-    }
-
+    // ------------------------------------------------------------------------
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
@@ -106,17 +88,19 @@ public partial class MonoBehaviour : Node3D
         m_gameObject = GetParent() as GameObject;
 
         Assert.IsTrue(m_gameObject != null, "This MonoBehaviour component does not belong to any parent GameObject");
-        Awake();
+        DoAwake();
 
-        Start();
-        m_started = true;
+        #if !DO_DEFERRED_START
+        DoStart();
+        #endif
+
+        // Debug.Log("_Ready called for component " + ComputeNodeName() + "("+ Name +") in object " + gameObject.Name + "\n" + gameObject.fullQualifiedName + "\n");
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(double delta)
     {
         base._Process(delta);
-
         if (Engine.IsEditorHint())
         {   
             if (m_scriptChanged)
@@ -127,43 +111,97 @@ public partial class MonoBehaviour : Node3D
         }
         else
         {
-            if (! m_started)
+            #if DO_DEFERRED_START
+            if (! HasStarted())
             {
-                #if !DEBUG
-                try
-                #endif
-                {
-                    Start();
-                }
-                #if !DEBUG
-                catch
-                #endif
-                {                    
-
-                }
-
-                m_started = true;
+                DoStart();
             }
             else
-            {          
-                #if !DEBUG
-                try
-                #endif
-                {
-                Update();
-                }
-                #if !DEBUG
-                catch
-                #endif
-                {
-                    
-                }
+            #endif
+            {
+                DoUpdate();
             }
         }
     }
-
+    // ------------------------------------------------------------------------
+    // Component public methods:
+    // ------------------------------------------------------------------------    
+    // Retrieves a 'sibling' component inside the parent
+    // ------------------------------------------------------------------------    
+    public T GetComponent<T>() where T : Node
+    {
+        return m_gameObject.GetComponent<T>();
+    } 
+    // ------------------------------------------------------------------------
     public bool HasStarted()
     {
         return m_started;
     }
+    
+    // ------------------------------------------------------------------------
+    // Wrapper methods
+    // ------------------------------------------------------------------------
+    private void DoAwake()
+    {
+        try
+        {
+            Awake();
+        }
+        catch (Exception ex)
+        {
+            Debug.LogException(ex);
+            throw; // Rethrow the exception to halt the application
+        }
+    }
+
+    private void DoStart()
+    {
+        try
+        {
+            Start();
+            m_started = true;
+        }
+        catch (Exception ex)
+        {
+            Debug.LogException(ex);
+            throw; // Rethrow the exception to halt the application
+        }
+    }
+
+    private void DoUpdate()
+    {
+        try
+        {
+            Update();
+        }
+        catch (Exception ex)
+        {
+            Debug.LogException(ex);
+            throw; // Rethrow the exception to halt the application
+        }
+    }
+
+    // ------------------------------------------------------------------------
+    /// Component lifetime methods
+
+    protected void Destroy(GameObject i_gameObject)
+    {
+        i_gameObject.Dispose();
+    }
+
+    protected void DontDestroyOnLoad(GameObject i_gameObject)
+    {
+    }
+    
+    protected virtual void Awake()
+    {
+    }
+
+    protected virtual void Start()
+    {
+    }
+    
+    protected virtual void Update()
+    {        
+    }    
 }
